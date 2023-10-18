@@ -14,7 +14,7 @@ options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
 driver = webdriver.Chrome(options=options)
 
-url = 'https://plenamata.eco/estimativas'
+url = 'https://plenamata.eco/monitor/'
 driver.get(url)
  
 #This is the function that will create the Server in the ip host and port 5000
@@ -41,7 +41,16 @@ def test_disconnect():
 def websraping():
     html = driver.page_source
     page_soup = BeautifulSoup(html,features="lxml")
-    dados_roubados = page_soup.find("div", {"class": "item-number big"}).text
-    emit('my response', {'data': dados_roubados})
+
+    dados_roubados = page_soup.findAll("span", {"class": "dashboard-panel__number"})
+    # print(dados_roubados)
+    emit('my response',  {
+        "arvoresCortadas": dados_roubados[0].text,
+        "desmatamentoTotal": dados_roubados[1].text,
+        "taxaDesmatamentoDia": dados_roubados[2].text,
+        "taxaDesmatamentoHec": dados_roubados[3].text,
+        "areaDesmatada": dados_roubados[4].text,
+        
+    })
 
 
